@@ -11,3 +11,6 @@ public class DemoApplication {
 	}
 
 }
+do {
+	
+} while (condition);
