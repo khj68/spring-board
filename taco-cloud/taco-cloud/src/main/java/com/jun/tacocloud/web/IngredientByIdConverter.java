@@ -1,5 +1,7 @@
 package com.jun.tacocloud.web;
 
+import java.util.Optional;
+
 import com.jun.tacocloud.Ingredient;
 import com.jun.tacocloud.data.IngredientRepository;
 
@@ -18,6 +20,8 @@ public class IngredientByIdConverter implements Converter<String, Ingredient> {
 
     @Override
     public Ingredient convert(String id) {
-        return ingredientRepo.findById(id);
+        // return ingredientRepo.findById(id);
+        Optional<Ingredient> optionalIngredient = ingredientRepo.findById(id);
+        return optionalIngredient.isPresent() ? optionalIngredient.get() : null;
     }
 }
