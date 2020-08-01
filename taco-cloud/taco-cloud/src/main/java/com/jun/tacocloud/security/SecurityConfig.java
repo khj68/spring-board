@@ -1,5 +1,8 @@
 package com.jun.tacocloud.security;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +23,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .httpBasic();
     }
 
+    @Autowired
+    DataSource dataSource;
+    
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         // IN MEMORY
@@ -31,5 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //         .withUser("user2")
         //         .password("{noop}password2")
         //         .authorities("ROLE_USER");
+        auth
+            .jdbcAuthentication()
+            .dataSource(dataSource);
     }
 }
