@@ -1,5 +1,6 @@
 package com.jun.tacocloud.web;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,11 +19,13 @@ import org.springframework.validation.Errors;
 
 import lombok.extern.slf4j.Slf4j;
 import com.jun.tacocloud.Taco;
+import com.jun.tacocloud.User;
 import com.jun.tacocloud.Ingredient;
 import com.jun.tacocloud.Order;
 import com.jun.tacocloud.Ingredient.Type;
 import com.jun.tacocloud.data.IngredientRepository;
 import com.jun.tacocloud.data.TacoRepository;
+import com.jun.tacocloud.data.UserRepository;
 
 @Slf4j
 @Controller
@@ -33,11 +36,13 @@ public class DesignTacoController {
     private final IngredientRepository ingredientRepo;
 
     private TacoRepository tacoRepo;
+    private UserRepository userRepo;
 
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository tacoRepo) {
+    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository tacoRepo, UserRepository userRepo) {
         this.ingredientRepo = ingredientRepo;
         this.tacoRepo = tacoRepo;
+        this.userRepo = userRepo;
     }
 
     @ModelAttribute(name = "order")
@@ -51,7 +56,7 @@ public class DesignTacoController {
     }
     
     @GetMapping
-    public String showDesignForm(final Model model) {
+    public String showDesignForm(Model model, Principal principal) {
         // final List<Ingredient> ingredients = Arrays.asList(
         //     new Ingredient("FLTO", "Flour Tortilla", Type.WRAP),
         //     new Ingredient("COTO", "Corn Tortilla", Type.WRAP),
@@ -74,7 +79,11 @@ public class DesignTacoController {
                 filterByType(ingredients, type));
         }
 
-        model.addAttribute("taco", new Taco());
+        // model.addAttribute("taco", new Taco());
+
+        String username = principal.getName();
+        User user = userRepo.findByUsername(username);
+        model.addAttribute("user", user);
         
         return "design";
     }
